@@ -14,14 +14,14 @@ export ZSH="$HOME/.oh-my-zsh"
 ZSH_THEME="spaceship"
 
 # Display spaceship ASCII and system specs
-echo "
-    __                       OS: $(sw_vers -productVersion)
-   /==\\     CHAPO            User: $(whoami)
-  |    |     SPACESHIP       Host: $(hostname)
- /______\\                    CPU: $(sysctl -n machdep.cpu.brand_string)
-(o)====(o)                   RAM: $(sysctl -n hw.memsize | awk '{print $1/1024/1024/1024" GB"}')
-                             Disk: $(df -h / | awk 'NR==2 {print $4}')
-"
+echo -e "
+\033[1;35m    __                       \033[1;32mOS: \033[1;34m$(sw_vers -productVersion)
+\033[1;35m   /==\\     \033[1;36mCHAPO           \033[1;32mUser: \033[1;34m$(whoami)
+\033[1;35m  |    |     \033[1;36mSPACESHIP        \033[1;32mHost: \033[1;34m$(hostname)
+\033[1;35m /______\\                   \033[1;32mCPU: \033[1;34m$(sysctl -n machdep.cpu.brand_string)
+\033[1;35m(o)====(o)                  \033[1;32mRAM: \033[1;34m$(sysctl -n hw.memsize | awk '{print $1/1024/1024/1024" GB"}')
+                             \033[1;32mDisk: \033[1;34m$(df -h / | awk 'NR==2 {print $4}')
+\033[0m"
 
 # Spaceship configuration
 SPACESHIP_TIME_SHOW=true
