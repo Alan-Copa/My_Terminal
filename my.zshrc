@@ -24,8 +24,9 @@ export ZSH="$HOME/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="spaceship"
 
-# --- MILKY WAY FETCH ---
-# 1. Calculate Data Variables
+# --- MILKY WAY GALAXY FETCH (Radial/Spiral Coloring) ---
+
+# 1. Calculate System Data
 user_name=$(whoami)
 host_name=$(hostname | cut -d. -f1)
 os_ver="macOS $(sw_vers -productVersion)"
@@ -34,34 +35,83 @@ uptime_info=$(uptime | awk -F'(up |,| users)' '{print $2}' | xargs)
 shell_name=$(basename "$SHELL")
 cpu_info=$(sysctl -n machdep.cpu.brand_string | sed 's/Apple //')
 ram_info=$(sysctl -n hw.memsize | awk '{print $1/1024/1024/1024" GB"}')
-
-# Disk: Shows "Total / Available"
-# NR==2 selects the second line of df output. $2 is Total, $4 is Available.
 disk_info=$(df -h / | awk 'NR==2 {print $2 " Total / " $4 " Free"}')
 
 # 2. Define Colors
-C_PURPLE="\033[1;35m"
-C_CYAN="\033[1;36m"
-C_BLUE="\033[1;34m"
-C_GREEN="\033[1;32m"
-C_RESET="\033[0m"
-C_GRAY="\033[1;30m"
+C_P="\033[1;35m"  # Purple (Outer)
+C_B="\033[1;34m"  # Blue (Mid)
+C_C="\033[1;36m"  # Cyan (Inner)
+C_W="\033[1;37m"  # White (Core)
+C_Y="\033[1;33m"  # Yellow (Core Center)
+C_G="\033[1;32m"  # Green (Hardware)
+C_M="\033[1;35m"  # Magenta (System)
+C_T="\033[1;36m"  # Teal (Identity)
+C_X="\033[0m"     # Reset
+C_D="\033[1;30m"  # Dark Gray (Separator)
 
-# 3. Print - Galaxy Shape + Grouped Info
-printf "${C_PURPLE}      . : .       ${C_CYAN}%s${C_RESET}\n"         "MILKY WAY STATION"
-printf "${C_PURPLE}    '.  _  .'     ${C_GRAY}-------------------${C_RESET}\n"
-printf "${C_PURPLE}   -=  ( )  =-    ${C_CYAN}User:   ${C_RESET}%s${C_RESET}\n" "$user_name"
-printf "${C_PURPLE}    .'  ~  '.     ${C_CYAN}Host:   ${C_RESET}%s${C_RESET}\n" "$host_name"
-printf "${C_PURPLE}      ' : '       ${C_CYAN}Shell:  ${C_RESET}%s${C_RESET}\n" "$shell_name"
-printf "${C_PURPLE}       . '        ${C_RESET}\n"
-printf "${C_PURPLE}      .           ${C_PURPLE}OS:     ${C_RESET}%s${C_RESET}\n" "$os_ver"
-printf "${C_PURPLE}     .            ${C_PURPLE}Kernel: ${C_RESET}%s${C_RESET}\n" "$kernel_ver"
-printf "${C_PURPLE}    .             ${C_PURPLE}Uptime: ${C_RESET}%s${C_RESET}\n" "$uptime_info"
-printf "${C_PURPLE}   .              ${C_RESET}\n"
-printf "${C_PURPLE}    '             ${C_GREEN}CPU:    ${C_RESET}%s${C_RESET}\n" "$cpu_info"
-printf "${C_PURPLE}     '            ${C_GREEN}RAM:    ${C_RESET}%s${C_RESET}\n" "$ram_info"
-printf "${C_PURPLE}      '           ${C_GREEN}Disk:   ${C_RESET}%s${C_RESET}\n" "$disk_info"
-printf "\n"
+# 3. Print Galaxy (Radial Coloring)
+
+# Line 1: Outer (Purple)
+printf "${C_P}             __,aaPPPPPPPPaa,__${C_X}\n"
+
+# Line 2: Outer (Purple)
+printf "${C_P}         ,adP\"\"\"'          \`\"\"Yb,_${C_X}\n"
+
+# Line 3: Outer (Purple) -> Mid (Blue)
+printf "${C_P}      ,ad\"'                     \`\"Yb,${C_X}\n"
+
+# Line 4: Outer (Purple) -> Mid (Blue) -> Outer (Purple)
+printf "${C_P}    ,dP'     ${C_B}_,adPP\"\"\"\"\"YYba,_     ${C_P}\`\"Y,${C_X}\n"
+
+# Line 5: Outer -> Mid -> Outer
+printf "${C_P}   aP'     ${C_B},d\"\"'           \`\"\"Ya,     ${C_P}\"Y,${C_X}\n"
+
+# Line 6: Outer -> Mid -> Inner (Cyan)
+printf "${C_P} ,d\"     ${C_B},P\"     ${C_C}_________${C_B}     \`\"b,    ${C_P}\`Yb,    ${C_T}%s${C_X}\n" "CHAPO'S GALAXY"
+
+# Line 7: Outer -> Mid -> Inner (Cyan)
+printf "${C_P},d'     ${C_B}d\"    ${C_C},adP\"\"\"\"\"\"\"\"Yba,    ${C_B}\"b,    ${C_P}\"Y,   ${C_D}-------------------${C_X}\n"
+
+# Line 8: Outer -> Mid -> Inner -> Mid -> Outer
+printf "${C_P}d'    ${C_B},P'   ${C_C},dP\"            \`Yb,   ${C_B}\`Y,    ${C_P}\`Y,  ${C_T}User:   ${C_X}%s${C_X}\n" "$user_name"
+
+# Line 9: Outer -> Mid -> Inner -> Core (Yellow) -> Inner -> Mid -> Outer
+printf "${C_P}8    ${C_B},P'   ${C_C},d'    ${C_Y},dP\"\"Yb,    ${C_C}\`Y,   ${C_B}\`Y,    ${C_P}\`b  ${C_T}Host:   ${C_X}%s${C_X}\n" "$host_name"
+
+# Line 10: Outer -> Mid -> Inner -> Core -> Inner -> Mid -> Outer
+printf "${C_P}8    ${C_B}d'    ${C_C}d'   ${C_Y},d\"      \"b,   ${C_C}\`Y,   ${C_B}\`8,    ${C_P}Y, ${C_T}Shell:  ${C_X}%s${C_X}\n" "$shell_name"
+
+# Line 11: Outer -> Mid -> Inner -> Core -> CENTER (White) -> Core -> Inner -> Mid -> Outer
+printf "${C_P}8    ${C_B}8     ${C_C}8    ${C_Y}d'    ${C_W}_${C_Y}   \`Y,   ${C_C}\`8    ${C_B}\`8    ${C_P}\`b ${C_X}\n"
+
+# Line 12: Outer -> Mid -> Inner -> Core -> CENTER -> Core -> Inner -> Mid -> Outer
+printf "${C_P}8    ${C_B}8     ${C_C}8    ${C_Y}8     ${C_W}8${C_Y}    \`b    ${C_C}8     ${C_B}8     ${C_P}8 ${C_M}OS:     ${C_X}%s${C_X}\n" "$os_ver"
+
+# Line 13: Outer -> Mid -> Inner -> Core -> Inner -> Mid -> Outer
+printf "${C_P}8    ${C_B}Y,    ${C_C}Y,   ${C_Y}\`b, ,aP     P    ${C_C}8    ${C_B},P     ${C_P}8 ${C_M}Kernel: ${C_X}%s${C_X}\n" "$kernel_ver"
+
+# Line 14: Outer -> Mid -> Inner -> Core -> Inner -> Mid -> Outer
+printf "${C_P}I,   ${C_B}\`Y,   ${C_C}\`8,    ${C_Y}\"\"\"\"     ${C_C}d'   ,P    ${C_B}d\"    ${C_P},P ${C_M}Uptime: ${C_X}%s${C_X}\n" "$uptime_info"
+
+# Line 15: Outer -> Mid -> Inner -> Mid -> Outer
+printf "${C_P}\`b,   ${C_B}\`8,    ${C_C}\"b,         ,P\"   ${C_B},P'   ${C_P},P'    d' ${C_X}\n"
+
+# Line 16: Outer -> Mid -> Inner -> Mid -> Outer
+printf "${C_P} \`b,   ${C_B}\`Ya,    ${C_C}\"Ya,,__,aP\"    ${C_B},P'   ${C_P},P\"    ,P  ${C_G}CPU:    ${C_X}%s${C_X}\n" "$cpu_info"
+
+# Line 17: Outer -> Mid -> Outer
+printf "${C_P}  \`Y,    ${C_B}\`Ya,     ${C_B}\`\"\"\"''     ${C_P},P'   ,d\"    ,P'  ${C_G}RAM:    ${C_X}%s${C_X}\n" "$ram_info"
+
+# Line 18: Outer -> Mid -> Outer
+printf "${C_P}   \`Yb,    ${C_B}\`\"Ya,_         _,d\"    ${C_P},P'    ,P'   ${C_G}Disk:   ${C_X}%s${C_X}\n" "$disk_info"
+
+# Line 19: All Outer (Purple)
+printf "${C_P}     \`Yb,      \"\"YbaaaaadP\"'     ,P'    ,P'${C_X}\n"
+
+# Lines 20-22: All Outer (Purple)
+printf "${C_P}       \`Yba,                   ,d'    ,dP'${C_X}\n"
+printf "${C_P}          \`\"Yba,__       __,adP\"     dP\"${C_X}\n"
+printf "${C_P}              \`\"\"\"\"\"\"\"\"\"\"\"\"\"'${C_X}\n"
 
 # Spaceship configuration
 SPACESHIP_TIME_SHOW=true
