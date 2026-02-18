@@ -1,5 +1,16 @@
+export PATH=/Library/TeX/texbin:$PATH
+
+# JAVA PATH
+export JAVA_HOME="/opt/homebrew/opt/openjdk@21"
+export PATH="$JAVA_HOME/bin:$PATH"
+
+
 # Python pip PATH
 export PATH="$HOME/Library/Python/3.9/bin:$PATH"
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+
+# Pixi Autocompletion for Robotics
+# eval "$(pixi completion --shell zsh)"
 
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
@@ -13,15 +24,44 @@ export ZSH="$HOME/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="spaceship"
 
-# Display spaceship ASCII and system specs
-echo -e "
-\033[1;35m    __                      \033[1;32mOS: \033[1;34m$(sw_vers -productVersion)
-\033[1;35m   /==\\     \033[1;36mCHAPO           \033[1;32mUser: \033[1;34m$(whoami)
-\033[1;35m  |    |     \033[1;36mSPACESHIP      \033[1;32mHost: \033[1;34m$(hostname)
-\033[1;35m /______\\                   \033[1;32mCPU: \033[1;34m$(sysctl -n machdep.cpu.brand_string)
-\033[1;35m(o)====(o)                  \033[1;32mRAM: \033[1;34m$(sysctl -n hw.memsize | awk '{print $1/1024/1024/1024" GB"}')
-                            \033[1;32mDisk: \033[1;34m$(df -h / | awk 'NR==2 {print $4}')
-\033[0m"
+# --- MILKY WAY FETCH ---
+# 1. Calculate Data Variables
+user_name=$(whoami)
+host_name=$(hostname | cut -d. -f1)
+os_ver="macOS $(sw_vers -productVersion)"
+kernel_ver=$(uname -r)
+uptime_info=$(uptime | awk -F'(up |,| users)' '{print $2}' | xargs)
+shell_name=$(basename "$SHELL")
+cpu_info=$(sysctl -n machdep.cpu.brand_string | sed 's/Apple //')
+ram_info=$(sysctl -n hw.memsize | awk '{print $1/1024/1024/1024" GB"}')
+
+# Disk: Shows "Total / Available"
+# NR==2 selects the second line of df output. $2 is Total, $4 is Available.
+disk_info=$(df -h / | awk 'NR==2 {print $2 " Total / " $4 " Free"}')
+
+# 2. Define Colors
+C_PURPLE="\033[1;35m"
+C_CYAN="\033[1;36m"
+C_BLUE="\033[1;34m"
+C_GREEN="\033[1;32m"
+C_RESET="\033[0m"
+C_GRAY="\033[1;30m"
+
+# 3. Print - Galaxy Shape + Grouped Info
+printf "${C_PURPLE}      . : .       ${C_CYAN}%s${C_RESET}\n"         "MILKY WAY STATION"
+printf "${C_PURPLE}    '.  _  .'     ${C_GRAY}-------------------${C_RESET}\n"
+printf "${C_PURPLE}   -=  ( )  =-    ${C_CYAN}User:   ${C_RESET}%s${C_RESET}\n" "$user_name"
+printf "${C_PURPLE}    .'  ~  '.     ${C_CYAN}Host:   ${C_RESET}%s${C_RESET}\n" "$host_name"
+printf "${C_PURPLE}      ' : '       ${C_CYAN}Shell:  ${C_RESET}%s${C_RESET}\n" "$shell_name"
+printf "${C_PURPLE}       . '        ${C_RESET}\n"
+printf "${C_PURPLE}      .           ${C_PURPLE}OS:     ${C_RESET}%s${C_RESET}\n" "$os_ver"
+printf "${C_PURPLE}     .            ${C_PURPLE}Kernel: ${C_RESET}%s${C_RESET}\n" "$kernel_ver"
+printf "${C_PURPLE}    .             ${C_PURPLE}Uptime: ${C_RESET}%s${C_RESET}\n" "$uptime_info"
+printf "${C_PURPLE}   .              ${C_RESET}\n"
+printf "${C_PURPLE}    '             ${C_GREEN}CPU:    ${C_RESET}%s${C_RESET}\n" "$cpu_info"
+printf "${C_PURPLE}     '            ${C_GREEN}RAM:    ${C_RESET}%s${C_RESET}\n" "$ram_info"
+printf "${C_PURPLE}      '           ${C_GREEN}Disk:   ${C_RESET}%s${C_RESET}\n" "$disk_info"
+printf "\n"
 
 # Spaceship configuration
 SPACESHIP_TIME_SHOW=true
@@ -38,6 +78,9 @@ SPACESHIP_PROMPT_ORDER=(
   conda
   char
 )
+
+# Make the prompt character a rocket!
+SPACESHIP_CHAR_SYMBOL="🚀 "
 
 # Customize colors (optional)
 SPACESHIP_GIT_BRANCH_COLOR="yellow"
@@ -135,3 +178,30 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+export PATH="/opt/homebrew/lib/ruby/gems/3.4.0/bin:$PATH"
+export PATH="/Users/alancopa/.pixi/bin:$PATH"
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+__conda_setup="$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+if [ $? -eq 0 ]; then
+    eval "$__conda_setup"
+else
+    if [ -f "/opt/anaconda3/etc/profile.d/conda.sh" ]; then
+        . "/opt/anaconda3/etc/profile.d/conda.sh"
+    else
+        export PATH="/opt/anaconda3/bin:$PATH"
+    fi
+fi
+unset __conda_setup
+# <<< conda initialize <<<
+
+
+# Added by Antigravity
+export PATH="/Users/alancopa/.antigravity/antigravity/bin:$PATH"
+
+. "$HOME/.local/bin/env"
