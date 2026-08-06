@@ -11,13 +11,21 @@ menu selection, git/flag completion, and the `ll`/`la`/`l` aliases.
 
 | | |
 |---|---|
-| prompt | `robbyrussell` — `➜  dir git:(main) ✗` |
+| prompt | `spaceship` — time / user / dir / git / conda / 🚀 |
 | plugins | `git` |
 | fetch | 10-line compact galaxy |
 | PATH | `~/.local/bin` only |
 
-Self-contained. The omz source is guarded, so the shell still starts on a
-machine without it — you just lose the good completion.
+Both the omz source and the theme are guarded: without omz the shell still
+starts (minus the good completion), and without spaceship it falls back to
+`robbyrussell`. Install spaceship with:
+
+```
+git clone --depth=1 https://github.com/spaceship-prompt/spaceship-prompt.git \
+  "$ZSH/custom/themes/spaceship-prompt"
+ln -sf "$ZSH/custom/themes/spaceship-prompt/spaceship.zsh-theme" \
+  "$ZSH/custom/themes/spaceship.zsh-theme"
+```
 
 ### `my.zshrc` — old mac
 
@@ -28,10 +36,9 @@ machine without it — you just lose the good completion.
 | fetch | 22-line full ASCII galaxy, radial coloring |
 | PATH | texlive, openjdk 21, pip, ruby, pixi, nvm, conda, antigravity |
 
-Also wraps `claude` and `codex` to swap the Terminal window to neutral colors
-while they run, because the green-on-red profile wrecks their TUIs.
-
-Needs a separate spaceship install; `lite.zshrc` does not.
+Same spaceship prompt config as lite. Also wraps `claude` and `codex` to swap
+the Terminal window to neutral colors while they run, because the green-on-red
+profile wrecks their TUIs.
 
 ## Install
 

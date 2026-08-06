@@ -5,8 +5,34 @@ export PATH="$HOME/.local/bin:$PATH"
 # menu selection, and completions for git/flags/hosts. Guarded so the shell
 # still starts if omz isn't installed yet.
 export ZSH="$HOME/.oh-my-zsh"
-ZSH_THEME="robbyrussell"
 plugins=(git)
+
+# spaceship prompt, falling back to a stock theme if it isn't installed
+if [[ -f "$ZSH/custom/themes/spaceship.zsh-theme" ]]; then
+  ZSH_THEME="spaceship"
+else
+  ZSH_THEME="robbyrussell"
+fi
+
+SPACESHIP_TIME_SHOW=true
+SPACESHIP_USER_SHOW=always
+SPACESHIP_DIR_SHOW=true
+SPACESHIP_GIT_SHOW=true
+SPACESHIP_CONDA_SHOW=true
+
+SPACESHIP_PROMPT_ORDER=(
+  time
+  user
+  dir
+  git
+  conda
+  char
+)
+
+SPACESHIP_CHAR_SYMBOL="🚀 "
+SPACESHIP_GIT_BRANCH_COLOR="yellow"
+SPACESHIP_CONDA_COLOR="blue"
+
 [[ -f "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
 
 # --- compact galaxy fetch -------------------------------------------------
