@@ -255,3 +255,65 @@ unset __conda_setup
 export PATH="/Users/alancopa/.antigravity/antigravity/bin:$PATH"
 
 . "$HOME/.local/bin/env"
+
+# --- Neutral colors for AI CLIs (claude, codex) ---
+# The Homebrew profile paints normal text green and bold text red. TUIs that
+# assume a neutral foreground (Claude Code, Codex) render badly under it.
+# These wrappers recolor only the window running the CLI, then restore the
+# profile's own colors when it exits. Every other shell keeps the galaxy look.
+
+_term_window_colors() {
+  # $1 = neutral | restore  (acts on the Terminal window owning this shell)
+  [[ "$TERM_PROGRAM" == "Apple_Terminal" ]] || return 0
+  osascript - "$TTY" "$1" >/dev/null 2>&1 <<'OSA'
+on run argv
+  set theTTY to item 1 of argv
+  set theMode to item 2 of argv
+  tell application "Terminal"
+    repeat with w in windows
+      repeat with t in tabs of w
+        try
+          if tty of t is theTTY then
+            if theMode is "neutral" then
+              set normal text color of w to {55000, 55000, 55000}
+              set bold text color of w to {65535, 65535, 65535}
+              set cursor color of w to {48000, 48000, 48000}
+              try
+                set font antialiasing of w to true
+              end try
+            else
+              set p to current settings of w
+              set normal text color of w to normal text color of p
+              set bold text color of w to bold text color of p
+              set cursor color of w to cursor color of p
+              try
+                set font antialiasing of w to font antialiasing of p
+              end try
+            end if
+            return
+          end if
+        end try
+      end repeat
+    end repeat
+  end tell
+end run
+OSA
+}
+
+_with_neutral_colors() {
+  local bin=$1; shift
+  local rc=0
+  _term_window_colors neutral
+  {
+    command "$bin" "$@" || rc=$?
+  } always {
+    _term_window_colors restore
+  }
+  return $rc
+}
+
+claude() { _with_neutral_colors claude "$@" }
+codex()  { _with_neutral_colors codex "$@" }
+
+# Manual escape hatch if a CLI is killed hard and the colors stay neutral.
+alias term-colors-restore='_term_window_colors restore'
