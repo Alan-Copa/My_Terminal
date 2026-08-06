@@ -11,21 +11,36 @@ menu selection, git/flag completion, and the `ll`/`la`/`l` aliases.
 
 | | |
 |---|---|
-| prompt | `spaceship` — time / user / dir / git / conda / 🚀 |
+| prompt | own builder — time / user / dir / git / conda / 🚀 |
 | plugins | `git` |
 | fetch | 10-line compact galaxy |
 | PATH | `~/.local/bin` only |
 
-Both the omz source and the theme are guarded: without omz the shell still
-starts (minus the good completion), and without spaceship it falls back to
-`robbyrussell`. Install spaceship with:
+```
+16:28:50 developer ~/Desktop/My_Terminal  main ✗ 🚀
+```
 
-```
-git clone --depth=1 https://github.com/spaceship-prompt/spaceship-prompt.git \
-  "$ZSH/custom/themes/spaceship-prompt"
-ln -sf "$ZSH/custom/themes/spaceship-prompt/spaceship.zsh-theme" \
-  "$ZSH/custom/themes/spaceship.zsh-theme"
-```
+No theme (`ZSH_THEME=""`). The prompt is configured by the `LIGHTWEIGHT_*`
+vars at the top and rendered by `_lightweight_prompt` at the bottom, on a
+`precmd` hook. Same knobs spaceship gave, no third-party install, no
+subprocess per prompt — segments are prompt escapes plus zsh's own `vcs_info`.
+
+Edit `LIGHTWEIGHT_PROMPT_ORDER` and the prompt changes on the next line; the
+array is re-read every time. Segments hide themselves when empty:
+
+| change | result |
+|---|---|
+| `LIGHTWEIGHT_PROMPT_ORDER=(dir git char)` | `~/Desktop/My_Terminal  main ✗ 🚀` |
+| `LIGHTWEIGHT_GIT_SHOW=false` | `16:28:51 developer ~/Desktop/My_Terminal 🚀` |
+| outside a git repo | `16:28:51 developer /tmp 🚀` |
+| conda env active | `… main ✗ robotics 🚀` |
+
+Adding a segment = one `case` branch in the builder. `check-for-changes true`
+draws the `✗`/`✚` markers and is the only costly line — turn it off if a huge
+repo makes the prompt lag.
+
+The omz source is guarded, so the shell still starts on a machine without it —
+you just lose the good completion.
 
 ### `my.zshrc` — old mac
 
@@ -36,9 +51,9 @@ ln -sf "$ZSH/custom/themes/spaceship-prompt/spaceship.zsh-theme" \
 | fetch | 22-line full ASCII galaxy, radial coloring |
 | PATH | texlive, openjdk 21, pip, ruby, pixi, nvm, conda, antigravity |
 
-Same spaceship prompt config as lite. Also wraps `claude` and `codex` to swap
-the Terminal window to neutral colors while they run, because the green-on-red
-profile wrecks their TUIs.
+Needs a separate spaceship install; `lite.zshrc` does not. Also wraps `claude`
+and `codex` to swap the Terminal window to neutral colors while they run,
+because the green-on-red profile wrecks their TUIs.
 
 ## Install
 
