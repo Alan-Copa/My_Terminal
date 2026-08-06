@@ -1,5 +1,14 @@
 export PATH="$HOME/.local/bin:$PATH"
 
+# --- oh-my-zsh ------------------------------------------------------------
+# Brings the real completion system (compinit): case-insensitive matching,
+# menu selection, and completions for git/flags/hosts. Guarded so the shell
+# still starts if omz isn't installed yet.
+export ZSH="$HOME/.oh-my-zsh"
+ZSH_THEME="robbyrussell"
+plugins=(git)
+[[ -f "$ZSH/oh-my-zsh.sh" ]] && source "$ZSH/oh-my-zsh.sh"
+
 # --- compact galaxy fetch -------------------------------------------------
 sysinfo() {
   local C=$'\033[1;36m' M=$'\033[1;35m' G=$'\033[1;32m' X=$'\033[0m'
